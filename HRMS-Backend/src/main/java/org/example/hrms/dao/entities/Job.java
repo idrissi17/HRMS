@@ -36,6 +36,10 @@ public class Job {
     @Size(min = 10, max = 100, message = "Description must be between 10 and 100 characters long.")
     private String description;
 
+    @Column(name = "salary_range")
+    @NotBlank(message = "salary range must not be empty.")
+    private String salaryRange;
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;

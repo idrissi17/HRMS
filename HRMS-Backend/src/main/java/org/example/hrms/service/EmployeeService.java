@@ -14,6 +14,7 @@ public interface EmployeeService {
     public Employee getEmployeeByCode(String employeeCode);
     public Collection<Employee> getEmployeesByDepartmentId(long departmentId);
     public Employee addEmployeeToDepartment(Long departmentId, Employee employee);
-
+    public Employee promoteToManager(Long employeeId);
+    public List<Employee> getAllManagers();
 
 }

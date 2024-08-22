@@ -1,5 +1,6 @@
 package org.example.hrms.service;
 
+import jakarta.transaction.Transactional;
 import org.example.hrms.dao.entities.Department;
 import org.example.hrms.dao.entities.Employee;
 import org.example.hrms.dao.repository.DepartmentRepository;
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
-public class EmployeeServiceImplement implements EmployeeService{
+@Transactional
+public class EmployeeServiceImpl implements EmployeeService{
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -83,5 +86,21 @@ public class EmployeeServiceImplement implements EmployeeService{
         }
         employee.setDepartment(department);
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public Employee promoteToManager(Long employeeId) {
+      Employee employee =getEmployeeById(employeeId);
+      if(employee==null && employee.isManager()){
+          throw new RuntimeException("Employee not found or Employee already manager");
+      }
+      employee.setManager(true);
+        return updateEmployee(employee);
+    }
+
+    @Override
+    public List<Employee> getAllManagers() {
+        return employeeRepository.findAll().stream()
+                .filter(Employee::isManager).collect(Collectors.toList());
     }
 }

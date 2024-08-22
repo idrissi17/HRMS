@@ -15,5 +15,8 @@ public interface DepartmentService {
     public String getDepartmentName(Long departmentId);
     public Department updateDepartmentName(Long departmentId, String newName);
     public Boolean removeEmployeeFromDepartment(Long departmentId, String employeeCode);
+    public Department getDepartmentByName(String departmentName);
+    public Employee getDepartmentManager(Long departmentId);
+    public void assignDepartmentManager(Long departmentId, Long employeeId);
 
 }

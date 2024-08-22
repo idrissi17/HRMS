@@ -72,4 +72,9 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
    }
+   @GetMapping("/allManagers")
+    public ResponseEntity<List<Employee>>getAllManagers(){
+        List<Employee>managers=employeeService.getAllManagers();
+            return new ResponseEntity<>(managers,HttpStatus.OK);
+   }
 }

@@ -14,7 +14,11 @@ public interface JobService {
         public Boolean deleteJob(Long jobId);
         public Job getJobById(Long jobId);
         public List<Job>getAllJobs();
-        Collection<Employee> getEmployeesByJobId(Long jobId);
+        public Collection<Employee> getEmployeesByJobId(Long jobId);
+        public List<Job> getJobsByDepartmentId(Long departmentId);
+        public List<Job> getJobsByTitle(String title);
+        public Boolean assignEmployeeToJob(Long jobId, Long employeeId);
+        public Boolean removeEmployeeFromJob(Long jobId, Long employeeId);
 
 
 }

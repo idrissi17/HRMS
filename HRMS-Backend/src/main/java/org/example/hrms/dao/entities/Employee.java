@@ -4,15 +4,14 @@ package org.example.hrms.dao.entities;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.Manager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -76,12 +75,19 @@ public class Employee {
     @JoinColumn(name = "job_id")
     private Job job;
 
+    @Column(name = "is_manager")
+    private boolean isManager;
 
+    @Column(name = "manager_code")
+    private String managerCode;
 
+    @OneToMany(mappedBy = "employee")
+    private Collection<Vacation> vacations = new ArrayList<>();
 
     public Employee(Long employeeId, String employeeCode, String firstName,
                     String lastName, String email, String address, String phoneNumber,
-                    Date dateOfBirth, Date dateOfHire, Double salary, Department department,Job job) {
+                    Date dateOfBirth, Date dateOfHire, Double salary,
+                    Department department,Job job,boolean isManager,String managerCode,Collection vacations) {
         this.employeeId = employeeId;
         this.employeeCode = "EMP-"+String.valueOf(UUID.fromString(UUID.randomUUID().toString())).substring(0,5).toUpperCase();
         this.firstName = firstName;
@@ -94,6 +100,13 @@ public class Employee {
         this.salary = salary;
         this.department = department;
         this.job=job;
+        this.isManager=isManager;
+        this.vacations=new ArrayList<>();
+        if (isManager) {
+            this.managerCode = "MGR-" + this.employeeCode.split("-")[1];
+        }
+
 
     }
+
 }

@@ -1,5 +1,6 @@
 package org.example.hrms.service;
 
+import jakarta.transaction.Transactional;
 import org.example.hrms.dao.entities.Employee;
 import org.example.hrms.dao.entities.Job;
 import org.example.hrms.dao.repository.EmployeeRepository;
@@ -11,7 +12,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class JobServiceImplement implements JobService{
+@Transactional
+public class JobServiceImpl implements JobService{
     @Autowired
     private JobRepository jobRepository;
     @Autowired
@@ -63,7 +65,48 @@ public class JobServiceImplement implements JobService{
 
     @Override
     public Collection<Employee> getEmployeesByJobId(Long jobId) {
-        Job job=getJobById(jobId);
-        return job.getEmployees();
+        Job job = getJobById(jobId);
+        if (job != null) {
+            return job.getEmployees();
+        }
+        return null;
+
+    }
+
+    @Override
+    public List<Job> getJobsByDepartmentId(Long departmentId) {
+        return jobRepository.findByDepartmentDepartmentId(departmentId);
+    }
+
+    @Override
+    public List<Job> getJobsByTitle(String JobTitle) {
+        return jobRepository.findByJobTitleContainingIgnoreCase(JobTitle);
+    }
+
+    @Override
+    public Boolean assignEmployeeToJob(Long jobId, Long employeeId) {
+        Job job =getJobById(jobId);
+        Employee employee=employeeRepository.findById(employeeId).orElseThrow(
+                ()-> new RuntimeException("Employee not found "));
+        if(job!=null && employee!=null){
+            job.getEmployees().add(employee);
+            updateJob(job);
+            return  true;
+        }
+        return false;
+
+    }
+
+    @Override
+    public Boolean removeEmployeeFromJob(Long jobId, Long employeeId) {
+        Job job =getJobById(jobId);
+        Employee employee=employeeRepository.findById(employeeId).orElseThrow(
+                ()-> new RuntimeException("Employee not found "));
+        if(job !=null && employee!=null){
+            job.getEmployees().remove(employee);
+            updateJob(job);
+            return true;
+        }
+        return false;
     }
 }

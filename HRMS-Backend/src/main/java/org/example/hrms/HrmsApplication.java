@@ -29,14 +29,19 @@ public class HrmsApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Department department =Department.builder()
+		Department itDepartment = Department.builder()
 				.departmentName("IT")
 				.build();
-		Department department1=Department.builder()
-						.departmentName("Marketing")
-								.build();
-		departmentService.addDepartment(department);
-		departmentService.addDepartment(department1);
+
+		Department marketingDepartment = Department.builder()
+				.departmentName("Marketing")
+				.build();
+
+		// Save Departments
+		departmentService.addDepartment(itDepartment);
+		departmentService.addDepartment(marketingDepartment);
+
+		// Create Employees
 		Employee employee1 = Employee.builder()
 				.firstName("John")
 				.lastName("Doe")
@@ -46,7 +51,8 @@ public class HrmsApplication implements CommandLineRunner {
 				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1990-05-15"))
 				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-10"))
 				.salary(3000.00)
-				.department(department)
+				.department(itDepartment)
+				.isManager(true)
 				.build();
 
 		Employee employee2 = Employee.builder()
@@ -58,9 +64,10 @@ public class HrmsApplication implements CommandLineRunner {
 				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1985-10-20"))
 				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2019-06-15"))
 				.salary(4000.00)
-				.department(department)
+				.department(itDepartment)
 				.build();
 
+		// More Employees
 		Employee employee3 = Employee.builder()
 				.firstName("Alice")
 				.lastName("Johnson")
@@ -70,7 +77,7 @@ public class HrmsApplication implements CommandLineRunner {
 				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1992-03-30"))
 				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2021-08-01"))
 				.salary(3500.00)
-				.department(department)
+				.department(itDepartment)
 				.build();
 
 		Employee employee4 = Employee.builder()
@@ -82,7 +89,7 @@ public class HrmsApplication implements CommandLineRunner {
 				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1980-12-01"))
 				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2018-04-25"))
 				.salary(4500.00)
-				.department(department)
+				.department(itDepartment)
 				.build();
 
 		Employee employee5 = Employee.builder()
@@ -94,29 +101,36 @@ public class HrmsApplication implements CommandLineRunner {
 				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1995-07-19"))
 				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2022-02-14"))
 				.salary(3800.00)
-				.department(department1)
+				.department(marketingDepartment)
 				.build();
 
-		List<Employee>employeeList=new ArrayList<>(
-				Arrays.asList(employee1,employee2,employee3,employee4,employee5));
+		List<Employee> employeeList = new ArrayList<>(Arrays.asList(employee1, employee2, employee3, employee4, employee5));
 
+		// Save Employees
 		employeeList.forEach(employeeService::addEmployee);
 
-		department.setEmployees(employeeList);
-		department1.setEmployees(employeeList);
-		departmentService.updateDepartment(department);
-		departmentService.updateDepartment(department1);
-		Employee employee6 = Employee.builder()
+		// Update Departments with Employees
+		itDepartment.setEmployees(employeeList.subList(0, 4));
+		marketingDepartment.setEmployees(employeeList.subList(4, 5));
+		departmentService.updateDepartment(itDepartment);
+		departmentService.updateDepartment(marketingDepartment);
+
+		// Add a new employee and assign to a department
+		Employee newEmployee = Employee.builder()
 				.firstName("Ayoub")
 				.lastName("Mouchrif")
 				.email("mouchrif.ayoub@hotmail.com")
-				.address("550 bd mohammed vi,Casablanca ")
+				.address("550 bd mohammed vi, Casablanca")
 				.phoneNumber("+1987650322")
 				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("2001-06-20"))
 				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2025-12-12"))
 				.salary(10000.00)
 				.build();
-		employeeService.addEmployee(employee6);
+
+		employeeService.addEmployee(newEmployee);
+//		itDepartment.setManager(newEmployee);
+//		departmentService.assignDepartmentManager(itDepartment.getDepartmentId(),newEmployee.getEmployeeId());
+		employeeService.promoteToManager(newEmployee.getEmployeeId());
 
 
 

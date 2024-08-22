@@ -4,6 +4,7 @@ package org.example.hrms.web;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.hrms.dao.entities.Department;
+import org.example.hrms.dao.entities.Employee;
 import org.example.hrms.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,8 +70,34 @@ public class DepartmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Department> getDepartmentByName(@PathVariable("name") String departmentName) {
+        Department department = departmentService.getDepartmentByName(departmentName);
+        if (department != null) {
+            return new ResponseEntity<>(department, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-
+    @GetMapping("/{departmentId}/manager")
+    public ResponseEntity<Employee> getDepartmentManager(@PathVariable("departmentId") Long departmentId) {
+        try {
+            Employee manager = departmentService.getDepartmentManager(departmentId);
+            return new ResponseEntity<>(manager, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("/{departmentId}/assignManager/{employeeId}")
+    public ResponseEntity<Void> assignDepartmentManager(@PathVariable("departmentId") Long departmentId,
+                                                        @PathVariable("employeeId") Long employeeId) {
+        try {
+            departmentService.assignDepartmentManager(departmentId, employeeId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 }

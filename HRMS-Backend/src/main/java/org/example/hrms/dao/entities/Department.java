@@ -36,4 +36,8 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private Collection<Job>jobs=new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
+
 }
