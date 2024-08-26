@@ -19,9 +19,6 @@ import java.util.UUID;
 @Data
 @Builder
 @NoArgsConstructor
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "employeeId")
 public class Employee {
 
     @Id

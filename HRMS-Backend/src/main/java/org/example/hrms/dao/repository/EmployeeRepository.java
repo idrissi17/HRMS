@@ -3,6 +3,8 @@ package org.example.hrms.dao.repository;
 
 import org.example.hrms.dao.entities.Department;
 import org.example.hrms.dao.entities.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,9 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long> {
 
     Employee findEmployeeByEmployeeCode(String employeeCode);
     Collection<Employee> findEmployeesByDepartment(Department department);
+
+    Page<Employee>findAll(Pageable pageable);
+    Page<Employee>findByFirstNameContainingIgnoreCaseOrEmployeeCodeContainingIgnoreCase
+            ( String firstName, String employeeCode, Pageable pageable);
 
 }

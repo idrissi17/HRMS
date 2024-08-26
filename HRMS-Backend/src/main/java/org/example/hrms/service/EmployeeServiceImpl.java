@@ -6,6 +6,9 @@ import org.example.hrms.dao.entities.Employee;
 import org.example.hrms.dao.repository.DepartmentRepository;
 import org.example.hrms.dao.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -102,5 +105,16 @@ public class EmployeeServiceImpl implements EmployeeService{
     public List<Employee> getAllManagers() {
         return employeeRepository.findAll().stream()
                 .filter(Employee::isManager).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Employee> getAllEmployees(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return employeeRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Employee> searchByFirstNameOrEmployeeCode(String firstName, String employeeCode, Pageable pageable) {
+        return employeeRepository.findByFirstNameContainingIgnoreCaseOrEmployeeCodeContainingIgnoreCase(firstName, employeeCode, pageable);
     }
 }

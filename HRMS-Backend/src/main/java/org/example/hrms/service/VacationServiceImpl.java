@@ -2,6 +2,7 @@ package org.example.hrms.service;
 
 import jakarta.transaction.Transactional;
 import org.example.hrms.dao.entities.Vacation;
+import org.example.hrms.dao.entities.enums.VacationStatus;
 import org.example.hrms.dao.repository.EmployeeRepository;
 import org.example.hrms.dao.repository.VacationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,39 @@ public class VacationServiceImpl implements VacationService{
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve past vacations for employee ID: " + employeeId + ". " + e.getMessage());
         }
+    }
+
+    @Override
+    public Vacation updateVacationStatus(Long vacationId, VacationStatus vacationStatus) {
+        Vacation vacation = getVacationById(vacationId);
+
+        switch (vacationStatus) {
+            case APPROVED:
+                if (vacation.getStatus() != VacationStatus.PENDING) {
+                    throw new RuntimeException("Only pending vacations can be approved.");
+                }
+                break;
+            case REJECTED:
+                if (vacation.getStatus() != VacationStatus.PENDING) {
+                    throw new RuntimeException("Only pending vacations can be rejected.");
+                }
+                break;
+            case ON_VACATION:
+                if (vacation.getStatus() != VacationStatus.APPROVED) {
+                    throw new RuntimeException("Only approved vacations can be started.");
+                }
+                break;
+            case VACATION_END:
+                if (vacation.getStatus() != VacationStatus.ON_VACATION) {
+                    throw new RuntimeException("Only ongoing vacations can be ended.");
+                }
+                break;
+            default:
+                throw new RuntimeException("Invalid status transition.");
+        }
+
+        vacation.setStatus(vacationStatus);
+        return updateVacation(vacation);
     }
 
 }

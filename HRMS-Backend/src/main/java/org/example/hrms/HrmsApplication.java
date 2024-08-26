@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class HrmsApplication implements CommandLineRunner {
@@ -130,9 +131,89 @@ public class HrmsApplication implements CommandLineRunner {
 		employeeService.addEmployee(newEmployee);
 //		itDepartment.setManager(newEmployee);
 //		departmentService.assignDepartmentManager(itDepartment.getDepartmentId(),newEmployee.getEmployeeId());
-		employeeService.promoteToManager(newEmployee.getEmployeeId());
+//		employeeService.promoteToManager(newEmployee.getEmployeeId());
+
+		Employee employee6 = Employee.builder()
+				.firstName("Laura")
+				.lastName("Davis")
+				.email("laura.davis@example.com")
+				.address("888 Birch St, Riverside")
+				.phoneNumber("+1123456786")
+				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1993-09-10"))
+				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2022-11-12"))
+				.salary(3200.00)
+				.department(marketingDepartment)
+				.build();
+
+		Employee employee7 = Employee.builder()
+				.firstName("David")
+				.lastName("Miller")
+				.email("david.miller@example.com")
+				.address("111 Cedar St, Lakeside")
+				.phoneNumber("+1987654324")
+				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1988-11-25"))
+				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2017-09-05"))
+				.salary(4200.00)
+				.department(itDepartment)
+				.build();
+
+		Employee employee8 = Employee.builder()
+				.firstName("Sophia")
+				.lastName("Wilson")
+				.email("sophia.wilson@example.com")
+				.address("222 Willow St, Mountainview")
+				.phoneNumber("+1234567894")
+				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1996-03-18"))
+				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2023-01-10"))
+				.salary(2900.00)
+				.department(marketingDepartment)
+				.build();
+
+		Employee employee9 = Employee.builder()
+				.firstName("James")
+				.lastName("Anderson")
+				.email("james.anderson@example.com")
+				.address("333 Cherry St, Rivertown")
+				.phoneNumber("+1987654325")
+				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1983-04-12"))
+				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2015-10-22"))
+				.salary(4700.00)
+				.department(itDepartment)
+				.build();
+
+		Employee employee10 = Employee.builder()
+				.firstName("Olivia")
+				.lastName("Taylor")
+				.email("olivia.taylor@example.com")
+				.address("444 Spruce St, Brooksville")
+				.phoneNumber("+1234567895")
+				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1997-12-30"))
+				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2024-05-07"))
+				.salary(3100.00)
+				.department(marketingDepartment)
+				.build();
+		Employee employee11 = Employee.builder()
+				.firstName("omar")
+				.lastName("omari")
+				.email("omar.taylor@example.com")
+				.address("444 Spruce St, rabat")
+				.phoneNumber("+1237567895")
+				.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1999-12-30"))
+				.dateOfHire(new SimpleDateFormat("yyyy-MM-dd").parse("2023-05-07"))
+				.salary(4500.00)
+				.department(marketingDepartment)
+				.build();
+
+		employeeList.addAll(Arrays.asList(employee6, employee7, employee8, employee9, employee10,employee11));
 
 
+		employeeList.forEach(employeeService::addEmployee);
+
+		itDepartment.setEmployees(employeeList.stream().filter(e -> e.getDepartment().equals(itDepartment)).collect(Collectors.toList()));
+		marketingDepartment.setEmployees(employeeList.stream().filter(e -> e.getDepartment().equals(marketingDepartment)).collect(Collectors.toList()));
+
+		departmentService.updateDepartment(itDepartment);
+		departmentService.updateDepartment(marketingDepartment);
 
 
 

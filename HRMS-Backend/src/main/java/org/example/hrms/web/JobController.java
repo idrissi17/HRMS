@@ -34,7 +34,6 @@ public class JobController {
         }
         job.setJobId(jobId);
         Job updatedJob = jobService.updateJob(job);
-        log.info("Update is Ok");
         return new ResponseEntity<>(updatedJob, HttpStatus.OK);
     }
 
